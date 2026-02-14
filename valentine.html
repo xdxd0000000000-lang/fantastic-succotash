@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Love</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;500&display=swap');
+
+    body {
+        margin: 0;
+        font-family: "Prompt", sans-serif;
+        text-align: center;
+        background-color: #ffe6ed;
+        overflow: hidden; 
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .container {
+        width: 100%;
+        max-width: 600px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .page {
+        display: none;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
+        backdrop-filter: blur(5px);
+        margin: 20px;
+    }
+
+    img {
+        width: 100%;
+        max-width: 280px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+        margin-bottom: 20px;
+    }
+
+    h2, h3 {
+        color: #d63384;
+    }
+
+    button {
+        padding: 12px 30px;
+        margin: 10px;
+        border: none;
+        font-size: 18px;
+        border-radius: 50px;
+        background: linear-gradient(45deg, #ff5876, #ff9db5);
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+    button:hover { 
+        transform: scale(1.05);
+        opacity: 0.9; 
+    }
+
+    /* กล่องกรอกรหัสลับ */
+    input {
+        padding: 12px;
+        border-radius: 10px;
+        border: 2px solid #ff9db5;
+        font-size: 16px;
+        text-align: center;
+        outline: none;
+    }
+
+    /* --- ส่วน CSS ของหัวใจลอย --- */
+    .heart {
+        position: fixed;
+        bottom: -50px;
+        font-size: 24px;
+        user-select: none;
+        pointer-events: none;
+        z-index: 1;
+        animation: floatUp linear forwards; 
+    }
+
+    @keyframes floatUp {
+        0% {
+            transform: translateY(0) rotate(0deg) scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(-110vh) rotate(360deg) scale(1.5);
+            opacity: 0;
+        }
+    }
+
+</style>
+</head>
+<body>
+
+<audio id="bgm" loop>
+    <source src="YOUR-SOFT-MUSIC.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+    <div class="page" id="page1" style="display:block;">
+        <h2>สุขสันต์วันวาเลนไทน์ครับ ❤️</h2>
+        <img src="https://placehold.co/300x300/pink/white?text=IMAGE+1">
+        <br>
+        <button onclick="startApp()">ตกลง</button>
+        <button id="deny1" onmouseover="escapeButton('deny1')" ontouchstart="escapeButton('deny1')">ปฏิเสธ</button>
+    </div>
+
+    <div class="page" id="page2">
+        <h2>พี่มีเรื่องอยากจะบอก…</h2>
+        <h3>พี่ชอบหนูนะ ❤️</h3>
+        <button onclick="nextPage(3)">NEXT</button>
+    </div>
+
+    <div class="page" id="page3">
+        <h2>เพลงนี้สำหรับหนู</h2>
+        <audio controls id="songPlayer">
+            <source src="YOUR-LOVE-SONG.mp3" type="audio/mpeg">
+        </audio>
+        <br><br>
+        <button onclick="stopSongAndNext()">NEXT</button>
+    </div>
+
+    <div class="page" id="page4">
+        <h3>รู้ไหมพี่คนนี้ชอบใคร</h3>
+        <img src="https://placehold.co/300x300/pink/white?text=IMAGE+2">
+        <br>
+        <input id="code" placeholder="กรอกชื่อคนน่ารัก..." type="text">
+        <br><br>
+        <button onclick="checkCode()">NEXT</button>
+    </div>
+
+    <div class="page" id="page5">
+        <img src="https://placehold.co/300x300/pink/white?text=IMAGE+3">
+        <h3>พี่ทำขนาดนี้สนใจมาเป็นแฟนพี่ยัง ❤️</h3>
+        <button onclick="nextPage(6)">ตกลง</button>
+        <button id="deny2" onmouseover="escapeButton('deny2')" ontouchstart="escapeButton('deny2')">ปฏิเสธ</button>
+    </div>
+
+    <div class="page" id="page6">
+        <img src="https://placehold.co/300x300/pink/white?text=IMAGE+4">
+        <h2>เย้ ในที่สุดพี่ก็ถึงฝั่งฝันแล้ว ❤️</h2>
+        <button onclick="surprise()">กดเลย! เซอไพรส์ 🎉</button>
+    </div>
+</div>
+
+<script>
+let bgm = document.getElementById("bgm");
+bgm.volume = 0.3;
+
+function startApp() {
+    bgm.play().catch(e => console.log("Audio play failed"));
+    nextPage(2);
+}
+
+function stopSongAndNext() {
+    let song = document.getElementById("songPlayer");
+    song.pause();
+    nextPage(4);
+}
+
+function nextPage(page) {
+    document.querySelectorAll(".page").forEach(p => p.style.display = "none");
+    document.getElementById("page" + page).style.display = "block";
+}
+
+// --- แก้ไขฟังก์ชันนี้ครับ ---
+function escapeButton(id) {
+    const btn = document.getElementById(id);
+    
+    // เปลี่ยนเป็น fixed เพื่อให้ปุ่มหลุดออกจาก flow ของ container และวิ่งได้ทั่วหน้าจอจริงๆ
+    btn.style.position = "fixed"; 
+
+    // คำนวณพื้นที่หน้าจอที่ปลอดภัย (ไม่ชิดขอบเกินไป)
+    const maxWidth = window.innerWidth - btn.offsetWidth - 20; // ลบขอบ 20px
+    const maxHeight = window.innerHeight - btn.offsetHeight - 20;
+
+    // สุ่มตำแหน่ง X, Y
+    const newX = Math.random() * maxWidth;
+    const newY = Math.random() * maxHeight;
+
+    // กำหนดตำแหน่งใหม่ (ต้องมีหน่วย px)
+    btn.style.left = newX + "px";
+    btn.style.top = newY + "px";
+}
+
+function checkCode() {
+    let input = document.getElementById("code").value.trim();
+    let pass = ["เฟิร์น", "เฟิน", "น้องเฟิร์น", "fern"];
+
+    if (pass.includes(input)) {
+        nextPage(5);
+    } else {
+        alert("ผิดครับ! ลองคิดดีๆ พี่ชอบใครน้าาา (ใบ้: ฟ.)");
+    }
+}
+
+function surprise() {
+    let heartInterval = setInterval(createHeart, 100);
+    setTimeout(() => {
+        clearInterval(heartInterval);
+    }, 4000);
+}
+
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.innerHTML = "❤️";
+    heart.classList.add("heart");
+    heart.style.left = Math.random() * 100 + "vw";
+    let size = Math.random() * 30 + 20;
+    heart.style.fontSize = size + "px";
+    let duration = Math.random() * 3 + 3;
+    heart.style.animationDuration = duration + "s";
+    document.body.appendChild(heart);
+    setTimeout(() => {
+        heart.remove();
+    }, duration * 1000);
+}
+</script>
+
+</body>
+</html>
